@@ -1,0 +1,40 @@
+<div class='scatterplot-selection'>
+    <h2>PCA Dimensions</h2>
+    <form action = '{{ url('/'~experiment_code~'/pca') }}' method='GET'>
+        <div>
+            <div class="col-md-6">
+                <label for="x_axis">Select plot x-axis:</label>
+                <div>
+                    <select name='x_axis' id="x_axis">
+                        {% for column in pca_column_names %}
+                            <option value='{{ column }}'
+                                    {% if old('x_axis') == column %}
+                                        selected
+                                    {% elseif old('x_axis') == '' and 'PC1' == column %}
+                                        selected
+                                    {% endif %} >{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="y_axis">Select plot y-axis:</label>
+                <div>
+                    <select name='y_axis' id="y_axis">
+                        {% for column in pca_column_names %}
+                            <option value='{{ column }}'
+                                    {% if old('y_axis') == column %}
+                                        selected
+                                    {% elseif old('y_axis') == '' and 'PC2' == column %}
+                                        selected
+                                    {% endif %} >{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <input type='submit' value='Create PCA plot'/>
+    </form>
+</div>

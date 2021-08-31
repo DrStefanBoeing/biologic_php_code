@@ -1,0 +1,177 @@
+{% block head_scripts %}
+    <link href='{{ url('/dist/css/jquery-ui.css') }}' rel='stylesheet'>
+    <script src='{{ url('/dist/js/jquery-ui.js') }}'></script>
+{% endblock %}
+
+<script>
+    jQuery(document).ready(function() {
+        chart = new Highcharts.Chart({
+            chart: {renderTo: 'scatterplot',
+                type: 'scatter',
+                borderWidth: 2,
+                borderColor: '#009900',
+                zoomType: 'xy',
+                backgroundColor: {
+                    linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+                    stops: [[0, 'rgb(255, 255, 255)'],
+                        [1, 'rgb(255, 255, 255)']
+                    ]
+                },
+                plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+                plotShadow: true,
+                plotBorderWidth: 1
+            },
+
+            title: {text: ''
+            },
+
+            credits: {
+                enabled: false
+            },
+            subtitle: {text: ''},
+            xAxis: {title:
+                    {
+                        enabled: true,
+                        text: '{{ scatterplotProperties['x_axis_label'] }}'
+                    },
+
+                plotLines: [{color: 'red', // Color value
+                    dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                    value: '{{ scatterplotProperties['x_low_line'] }}',  // Value of where the line will appear
+                    width: 1 // Width of the line
+                },
+
+                    {color: 'red', // Color value
+                        dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                        value: '{{ scatterplotProperties['x_high_line']  }}',  // Value of where the line will appear
+                        width: 1 // Width of the line
+                    },
+
+                    {color: 'black', // Color value
+                        dashStyle: 'solid', // Style of the plot line. Default to solid
+                        value: 0,  // Value of where the line will appear
+                        width: 1 // Width of the line
+                    }]
+            },
+            yAxis: {title:
+                    {
+                        enabled: true,
+                        text: '{{ scatterplotProperties['y_axis_label'] }}'
+                    },
+                plotLines: [{color: 'red', // Color value
+                    dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                    value: '{{ scatterplotProperties['y_low_line'] }}',  // Value of where the line will appear
+                    width: 1 // Width of the line
+                },
+
+                    {color: 'red', // Color value
+                        dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                        value: '{{ scatterplotProperties['y_high_line'] }}',  // Value of where the line will appear
+                        width: 1 // Width of the line
+                    },
+
+                    {color: 'black', // Color value
+                        dashStyle: 'solid', // Style of the plot line. Default to solid
+                        value: 0,  // Value of where the line will appear
+                        width: 1 // Width of the line
+                    }]
+            },
+            legend: {
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                borderWidth: 1
+            },
+
+            plotOptions: {
+                scatter: {marker: {
+                        radius: 5,
+                        states: {
+                            hover: {enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        }
+                    },
+                    states: {
+                        hover: {
+                            marker: {enabled: false
+                            }
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{series.name}</b><br>',
+                        pointFormat: 'Site:{point.name}',
+                    },
+                    cursor: 'pointer',
+                    events: {
+                        click: function(event){
+                            var str = '{{ url('/'~experiment_code~'/gene-view') }}?query='+ event.point.name + '&exact=TRUE';
+                            window.open(str, '_blank');
+                        }
+                    }
+                }
+            },
+
+            series: [{name: '{{ scatterplotProperties['headlineStr'] }}',
+                data: {{ scatterplotProperties['background_series'] | raw}},
+                color: 'rgba(0,0,0,0.5)',
+                turboThreshold: 25000
+            },
+                {data: {{ scatterplotProperties['highlight_series'] | raw }},
+                    name: '{{ scatterplotProperties['highlightStr'] }}',
+                    color: '#FF0000',
+                    turboThreshold: 25000,
+                    marker: {symbol: 'circle'
+                    }
+                }]
+
+        });
+    });
+
+</script>
+
+<div style="margin-bottom: 10px;">
+    <input type='text' id='automplete_scat' name='query' style="font-size: 20px;" placeholder="Gene lookup" value="{{ old('query', '') }}" >
+    <button class="btn btn-flat  btn-success" style="padding: 5px 20px;font-size: 20px;margin-bottom: 9px;" onclick="getGene()">Go</button>
+</div>
+
+<div id='scatterplot' style='height: 800px; max-width: 800px; margin: 0 auto'>
+
+</div>
+
+{% block end_scripts %}
+    <script>
+        let getUrlParameter = function getUrlParameter(sParam) {
+            let sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+
+        function getGene() {
+            let x_axis = getUrlParameter('x_axis');
+            let y_axis = getUrlParameter('y_axis');
+            let experiment_code = "{{ experiment_code }}";
+            let query = document.getElementById('automplete_scat').value;
+            window.location.href = '/' + experiment_code + '/scatterplot?x_axis=' + x_axis + '&y_axis=' + y_axis + '&highlight_gene=' + query;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/'~experiment_code~'/ajax/gene-list') }}",
+            success: function(data) {
+                $( '#automplete_scat' ).autocomplete({
+                    source: data.gene_list,
+                    minLength: 2
+                });
+            },
+            error: function(err) {}
+        });
+    </script>
+{% endblock %}

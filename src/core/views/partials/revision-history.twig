@@ -1,0 +1,15 @@
+<h4 class="text-center">Revisions</h4>
+<div><a href="{{ url('/'~experiment_code~'/report') }}" class="btn btn-flat {% if revision_id is not defined %} btn-info {% else %} btn-default {% endif %}" style="width: 100%; margin-bottom: 10px;">
+        Current
+    </a>
+</div>
+{% for revision in report.revisions.reverse() %}
+    {% if loop.index < 10 %}
+    <div>
+        <a href="{{ url('/'~experiment_code~'/report/revisions/'~revision.id) }}" class="btn btn-flat {% if revision_id is defined and revision_id == revision.id %} btn-info {% else %} btn-default {% endif %}"
+           style="width: 100%; margin-bottom: 10px;">
+            {{ revision.created_at }}
+        </a>
+    </div>
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,23 @@
+{% if have_flash('success') %}
+    <div class="alert alert-success">
+        <strong>Success!</strong> {{ flash('success') }}
+    </div>
+{% endif %}
+
+{% if have_flash('info') %}
+    <div class="alert alert-info">
+        <strong>Info!</strong> {{ flash('info') }}
+    </div>
+{% endif %}
+
+{% if have_flash('warning') %}
+    <div class="alert alert-warning">
+        <strong>Warning!</strong> {{ flash('warning') }}
+    </div>
+{% endif %}
+
+{% if have_flash('error') %}
+    <div class="alert alert-danger">
+        <strong>Error:</strong> {{ flash('error') }}
+    </div>
+{% endif %}

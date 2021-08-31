@@ -1,0 +1,84 @@
+<script>
+    jQuery(document).ready(function() {
+        $('#heatmap_plot').highcharts({
+            chart: {
+                type: 'heatmap',
+                marginTop: 40,
+                marginBottom: 120,
+                marginLeft: 60,
+                borderWidth: 1,
+                borderColor: '#009900',
+                plotBackgroundColor: 'rgba(0, 0, 0, 0)',
+                plotBorderWidth: 1,
+                zoomType: 'xy'
+            },
+            plotOptions: {
+                series: {
+                    events: {
+                        click: function (event) {
+                            var str = '{{ url('/'~experiment_code~'/gene-view') }}?query='+ event.point.series.yAxis.categories[event.point.y] + '&exact=TRUE';
+                            window.open(str, '_blank');
+                        }
+                    }
+                }
+            },
+            title:{
+                text: ''
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis:{
+                categories: {{ x_categories|raw }},
+                labels: {
+                    rotation: -45
+                }
+            },
+            yAxis:
+                {categories: {{ y_categories|raw }},
+                    title: null,
+                    showLastLabel: false,
+                    labels: {enabled: false}
+                },
+            colorAxis:
+                {stops: [
+                        [0, '#3060cf'],
+                        [0.5, '#fffbbc'],
+                        [0.9, '#c4463a']
+                    ],
+                    min: {{ 'heatmap.lower_limit'|setting }},
+                    max: {{ 'heatmap.upper_limit'|setting }}
+
+                },
+
+            legend:
+                {align: 'right',
+                    layout: 'vertical',
+                    margin: 0,
+                    verticalAlign: 'middle',
+                    y: 25,
+                    symbolHeight: 280
+                },
+
+            tooltip:
+                {formatter: function ()
+                    {return 'Experiment  : <b>' + this.series.xAxis.categories[this.point.x]
+                        + '</b> <br>Gene Symbol: <b>'
+                        +  this.series.yAxis.categories[this.point.y]
+                        + '</b><br>lg2(Row-averaged counts): <b>'
+                        + this.point.value + '</b>';
+                    }
+                },
+            series: [{
+                turboThreshold: 100000,
+                name: '$headline',
+                borderWidth: 0,
+                data: {{ series }},
+            }]
+
+        });
+    });
+
+</script>
+
+<div id='heatmap_plot' style='height: 800px; max-width: 800px; margin: 0 auto'></div>

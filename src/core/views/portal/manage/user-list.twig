@@ -1,0 +1,52 @@
+{% extends 'portal/partials/layout.portal.twig' %}
+
+{% block content %}
+
+    <h1 class="text-center">Users</h1>
+    <br><br>
+
+    <table class="table table-striped table-bordered biologic-data-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Superuser</th>
+            <th>Local auth</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.name }}</td>
+                <td>
+                    {% if user.isSuperuser() %}
+                        1
+                    {% else %}
+                        0
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.local_auth == 1 %}
+                        1
+                    {% else %}
+                        0
+                    {% endif %}
+                </td>
+                <td>{{ user.created_at }}</td>
+                <td>
+                    <a href="{{ url('/manage/users/'~user.id) }}">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url('/manage/users/create') }}" class="btn btn-default form-control">New User</a>
+
+{% endblock %}
+

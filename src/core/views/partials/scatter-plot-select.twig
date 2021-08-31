@@ -1,0 +1,47 @@
+<div class='scatterplot-selection'>
+    <h2> Show category results in 2D scatterplot </h2>
+    <form action = '{{ url('/'~experiment_code~'/scatterplot') }}' method='GET'>
+        <div>
+            <div class="col-md-6">
+                <label for="x_axis">Select plot x-axis:</label>
+                <div>
+                    <select name='x_axis' id="x_axis">
+                        {% for key, option in setting('scatterplot.selection') %}
+                            <option value='{{ key }}'
+                                    {% if old('x_axis') == key %}
+                                        selected
+                                    {% elseif old('x_axis') == '' and setting('scatterplot.default-x') == key %}
+                                        selected
+                                    {% endif %} >{{ option['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="y_axis">Select plot y-axis:</label>
+                <div>
+                    <select name='y_axis' id="y_axis">
+                        {% for key, option in setting('scatterplot.selection') %}
+                            <option value='{{ key }}'
+                                    {% if old('y_axis') == key %}
+                                        selected
+                                    {% elseif old('y_axis') == '' and setting('scatterplot.default-y') == key %}
+                                        selected
+                                    {% endif %} >{{ option['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <br>
+        {% if highlight_gene is defined %}
+            <input type='hidden' name='highlight_gene' value="{{ highlight_gene }}" />
+        {% endif %}
+
+        {% if cat_id is defined %}
+            <input type='hidden' name='cat_id' value="{{ cat_id }}" />
+        {% endif %}
+
+        <input type='submit' value='Create Scatterplot'/>
+    </form>
+</div>
