@@ -1,0 +1,15 @@
+{% extends 'partials/layout.twig' %}
+
+{% block content %}
+
+    <h1 class='text-center'>Report</h1>
+    <br>
+
+    <div class="row">
+        <div class="col-sm-12">
+            {{ report.content|raw }}
+        </div>
+    </div>
+{% endblock %}
+
+

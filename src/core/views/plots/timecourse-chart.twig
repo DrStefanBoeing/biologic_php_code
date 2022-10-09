@@ -1,0 +1,57 @@
+<div id='tschart' style='min-width: 310px;
+            height: 400px;
+            max-width: 800px;
+            margin: 0 auto'>
+</div>
+
+
+
+<script>
+Highcharts.chart('tschart', {
+    chart:{
+            borderWidth: 1,
+            borderColor: '#009900',
+            zoomType: 'xy'
+    },
+
+    
+    legend: {
+        enabled: true,
+        verticalAlign: 'bottom'
+    },
+
+    title: {
+        text: ''                
+    },
+    subtitle: {
+        text: ''
+    },
+    credits: {
+        enabled: false
+    },
+
+    yAxis: {
+        min:0,
+        title: {
+            text: "{{ y_axis_label }}"
+        }
+     },
+
+    xAxis: {
+            title: {
+                enabled: true,
+                text: "{{ x_axis_label }}"
+            },
+            min: {{ xmin }},
+            max: {{ xmax }},
+            tickPositions: {{ tickPositions }},
+            plotLines: {{ plotlines_array | raw }}
+        },
+    series: {{ series|raw }}
+
+});
+
+</script>
+
+
+

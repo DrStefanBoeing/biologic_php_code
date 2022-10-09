@@ -1,0 +1,35 @@
+{% extends 'partials/layout.twig' %}
+
+
+{% block head_scripts %}
+
+    {% if scatterplotProperties is defined %}
+        <script src='https://code.highcharts.com/highcharts.js'></script>
+        <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class='content'>
+        {% if scatterplotProperties is defined %}
+            <div class='content'>
+                <div align='center'>
+                    <h2>FeatureView</h2>
+                    <br>
+                </div>
+
+                <div class="row">
+                    {% include 'partials/gene-and-gene-cat-lookup.twig' with {
+                        'default_x_axis': scatterplotProperties['default_x_axis'],
+                        'default_y_axis': scatterplotProperties['default_y_axis'],
+                        'pca_column_names': scatterplotProperties['pca_column_names'],
+                        'featureViewGeneResults': scatterplotProperties['featureViewGeneResults'],
+                    } %}
+                </div>
+            </div>
+        {% endif %}
+        <br>
+        <br>
+    </div>
+{% endblock %}

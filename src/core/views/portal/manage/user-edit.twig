@@ -1,0 +1,140 @@
+{% extends 'portal/partials/layout.portal.twig' %}
+
+{% block content %}
+
+    {% include 'partials/flash.twig' %}
+
+    <h1 class="text-center">Editing user: {{ user.email }}</h1>
+    <br><br>
+
+    <form class="form-horizontal" method="POST">
+
+        <div class="form-group">
+            <label for="name" class="control-label col-sm-2">Name</label>
+            <div class="col-sm-10">
+                <input type="text" id="name" name="name" class="form-control" value="{{ old('name', user.name) }}" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="superuser" class="control-label col-sm-2">Superuser?</label>
+            <div class="col-sm-10">
+                <input type="checkbox" name="superuser" style="margin-top: 12px;" id="superuser"
+                       {% if user.isSuperuser() %}
+                           checked="checked"
+                       {% endif %}
+                />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="local_auth" class="control-label col-sm-2">Local auth?</label>
+            <div class="col-sm-2">
+                <input type="checkbox" name="local_auth" style="margin-top: 12px;" id="local_auth"
+                        {% if user.local_auth == 1 %}
+                            checked="checked"
+                        {% endif %}
+                />
+            </div>
+
+            <div class="col-sm-2">
+                <div class="pull-right">
+                    <button data-toggle="collapse" data-target="#password_collapse" type="button" class="btn">
+                        <span style="text-decoration: underline;">Reset password</span> &#8595;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="password_collapse" class="collapse">
+            <div class="form-group">
+                <label for="password" class="control-label col-sm-2">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" id="password" name="password" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password_again" class="control-label col-sm-2">Password again</label>
+                <div class="col-sm-10">
+                    <input type="password" id="password_again" name="password_again" class="form-control" />
+                </div>
+            </div>
+
+            <hr>
+        </div>
+
+        <div class="form-group">
+            <label for="created_at" class="control-label col-sm-2">Created at</label>
+            <div class="col-sm-10">
+                <input disabled id="created_at" class="form-control" value="{{ user.created_at|date("h:m:s D jS F Y") }}" />
+            </div>
+        </div>
+
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#projects">Projects</a></li>
+            <li><a data-toggle="tab" href="#experiments">Experiments</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="projects" class="tab-pane fade in active">
+
+                <table class="table table-striped table-bordered biologic-data-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Write access</th>
+                        <th>Read access</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <td>{{ project.name }}</td>
+                            <td>
+                                <input type="checkbox" name="projects_write[{{ project.id }}]" {% if user.hasWritePermission(project) %} checked="checked" {% endif %} />
+                            </td>
+                            <td>
+                                <input type="checkbox" name="projects_read[{{ project.id }}]" {% if user.hasReadPermission(project) %} checked="checked" {% endif %} />
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="experiments" class="tab-pane fade">
+                <table class="table table-striped table-bordered biologic-data-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Experiment code</th>
+                        <th>Write access</th>
+                        <th>Read access</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for experiment in experiments %}
+                        <tr>
+                            <td>{{ experiment.name }}</td>
+                            <td>{{ experiment.experiment_code }}</td>
+                            <td>
+                                <input type="checkbox" name="experiments_write[{{ experiment.id }}]" {% if user.hasWritePermission(experiment) %} checked="checked" {% endif %} />
+                            </td>
+                            <td>
+                                <input type="checkbox" name="experiments_read[{{ experiment.id }}]" {% if user.hasReadPermission(experiment) %} checked="checked" {% endif %} />
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-default form-control">Update</button>
+
+    </form>
+
+{% endblock %}

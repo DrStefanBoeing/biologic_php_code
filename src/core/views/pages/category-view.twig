@@ -1,0 +1,41 @@
+{% extends 'partials/layout.twig' %}
+
+{% block head_scripts %}
+{% endblock %}
+
+{% block content %}
+    <div class='content'>
+        <h1 align='center'>CategoryView</h1>
+        <br>
+    </div>
+
+    <a name='category_selection'></a>
+
+    <div align='center'>
+        <h2>Browse results by category</h2>
+        <div align='center'>
+            <font size = '4'>
+                Please select the category type to display by <font color='red'>selecting</font> one of the <br>
+                <b>Category Types:</b>
+                <br>
+                <a href="{{ url('/'~experiment_code~'/category-view?category_type=Create heat map') }}" title="">Create heat-map</a>
+
+                {% for category_type in category_types %}
+                    |
+
+                    <a href="{{ url('/'~experiment_code~'/category-view?category_type=' ~ category_type) }}" title="">{{ category_type }}</a>
+                {% endfor %}
+            </font>
+        </div>
+    </div>
+
+    {% if category_table['heading'] == 'Create heat map' %}
+        {% include 'partials/heat-map-paste.twig' %}
+    {% else %}
+        {% include 'partials/ajax-data-table.twig' with {
+            'columns': category_table['columns'],
+            'ajax_post_append': {'cat_heading': category_table['heading']},
+            'ajax_url': url("/"~experiment_code~"/ajax/table/local-categories")
+        } %}
+    {% endif %}
+{% endblock %}

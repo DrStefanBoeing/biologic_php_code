@@ -1,0 +1,54 @@
+<script>
+    $(function () {
+        Highcharts.chart('container', {
+            chart:{
+                borderWidth: 1,
+                borderColor: '#009900',
+                zoomType: 'xy'
+            },
+            legend: {
+                enabled: true
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                title: {
+                    enabled: true,
+                    text: "{{ x_axis_label }}"
+                },
+                min: -1,
+                max: {{ x_max }},
+
+                categories: {{ categories|raw }},
+                labels: {
+                    rotation: -45
+                }
+            },
+            yAxis: {
+                title: {
+                    text: "{{ y_axis_label }}"
+                }
+
+            },
+
+            series: {{ series|raw }}
+        });
+    });
+</script>
+
+<!-- 3. Add the container -->
+<div align='center'>
+</div>
+
+<div id='container' style='min-width: 310px;
+		    height: 400px;
+		    max-width: 800px;
+			margin: 0 auto'>
+</div>

@@ -1,0 +1,511 @@
+{% block head_scripts %}
+    <link href='{{ url('/dist/css/jquery-ui.css') }}' rel='stylesheet'>
+{% endblock %}
+<div class="col-xs-4">
+    <div class="row">
+        <div id="gene_cat_selection_container">
+            Display Gene
+            <div class="col-sm-12 hidden">
+                <select id="classification_type" class="form-control col-sm-3">
+                    <option value="gene">Gene lookup</option>
+                    <option value="geneCat">Gene category lookup</option>
+                </select>
+            </div>
+            <div class="col-sm-12">
+                <input type='text' class="gene-selector" id='automplete_scat_gene' name='query' placeholder="Enter gene" value="{{ old('gene') }}"
+                       style="font: 14px Arial;
+                font-weight: 100;
+                padding: 10px 15px;
+                border-radius: 5px;
+                border: none;
+                ">
+            </div>
+
+            <br><br>
+            Select X-Axis
+            <div class="col-sm-12">
+                <select id="gene_cat_selection_x_axis" class="form-control col-sm-3">
+                    {% for column in pca_column_names %}
+                        <option value='{{ column }}'
+                                {% if old('x_axis') == column %}
+                                    selected
+                                {% elseif old('x_axis') == '' and 'UMAP_1' == column %}
+                                    selected
+                                {% endif %} >
+                            {{ column }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <br><br>
+            Select Y-Axis
+            <div class="col-sm-12">
+                <select id="gene_cat_selection_y_axis" class="form-control col-sm-3">
+                    {% for column in pca_column_names %}
+                        <option value='{{ column }}'
+                                {% if old('y_axis') == column %}
+                                    selected
+                                {% elseif old('y_axis') == '' and 'UMAP_2' == column %}
+                                    selected
+                                {% endif %} >
+                            {{ column }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <br><br>
+            Select Color Option
+            <div class="col-sm-12">
+                <select id="dot_color_selection" class="form-control col-sm-3">
+                    <option value="log10Expr">log10 Expression</option>
+                    <option value="sample_group_colors">Cluster</option>
+                    <option value="doublet">Doublet</option>
+                </select>
+            </div>
+
+            <br><br>
+            Split Plots By
+            <div class="col-sm-12">
+                <select id="splitPlotBy" name="splitPlotBy" class="form-control col-sm-3">
+                    <option value=""
+                            {% if old('splitPlotBy') == 'None' %}
+                                selected
+                            {% endif %}
+                    >None</option>
+                    <option value="sampleID"
+                            {% if old('splitPlotBy') == 'sampleID' %}
+                                selected
+                            {% endif %}
+                    >Sample ID</option>
+                </select>
+            </div>
+
+
+
+            <br><br>
+            Select Dotsize
+            <div class="col-sm-12">
+                <select id="dotsize" class="form-control col-sm-3">
+                    <option value="2">2</option>
+                    <option value="0.5">0.5</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+
+
+
+            <div class="col-sm-12">
+                <button id="btn_scat_cat" class="btn btn-flat  btn-success" onclick="getSelectionGene()">Get selection</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="overlay" style="display:none;">
+    <div class="spinner"></div>
+    <br/>
+    Loading...
+</div>
+
+<style>
+    #overlay {
+        background: #ffffff;
+        color: #666666;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        z-index: 5000;
+        top: 0;
+        left: 0;
+        float: left;
+        text-align: center;
+        padding-top: 25%;
+        opacity: .80;
+    }
+    button {
+        margin: 40px;
+        padding: 5px 20px;
+        cursor: pointer;
+    }
+    .spinner {
+        margin: 0 auto;
+        height: 64px;
+        width: 64px;
+        animation: rotate 0.8s infinite linear;
+        border: 5px solid firebrick;
+        border-right-color: transparent;
+        border-radius: 50%;
+    }
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<div class="col-xs-8">
+    <div class="row">
+        {% if scatterplotProperties['splitPlots'] == true %}
+            {% for key, plot in scatterplotProperties['plots'] %}
+                <div class="col-xs-12" style="margin-bottom: 25px">
+                    <div id='scatterplot{{ key }}' style='height: 95%; max-width: 95%; margin: 0 auto'></div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-xs-12">
+                <div id='scatterplot' style='height: 95%; max-width: 95%; margin: 0 auto'></div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block end_scripts %}
+    <script src='{{ url('/dist/js/jquery-ui.js') }}'> </script>
+    <script>
+
+
+        let getUrlParameter = function getUrlParameter(sParam) {
+            let sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+
+        function getXAxis() {
+            let e_x_axis = document.getElementById("gene_cat_selection_x_axis");
+            return e_x_axis.options[e_x_axis.selectedIndex].value;
+        }
+
+        function getYAxis() {
+            let e_y_axis = document.getElementById("gene_cat_selection_y_axis");
+            return e_y_axis.options[e_y_axis.selectedIndex].value;
+        }
+
+        function getDotsize(){
+            let e_dotsize = document.getElementById("dotsize");
+            return e_dotsize.options[e_dotsize.selectedIndex].value;
+        }
+
+
+
+
+        function getSelectionGene() {
+            let x_axis = getXAxis();
+            let y_axis = getYAxis();
+            let experiment_code = "{{ experiment_code }}";
+            let dotsize = document.getElementById('dotsize').value;
+            let splitPlotBy = document.getElementById('splitPlotBy').value;
+
+
+            let gene = document.getElementById('automplete_scat_gene').value;
+
+            window.location.href = '/' + experiment_code + '/feature-view?x_axis=' + x_axis + '&y_axis=' + y_axis + '&gene=' + gene + '&view=feature_view&dotsize=' + dotsize + '&splitPlotBy=' + splitPlotBy;
+        }
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/'~experiment_code~'/ajax/gene-list') }}",
+            success: function(data) {
+                $( '#automplete_scat_gene' ).autocomplete({
+                    source: data.gene_list,
+                    minLength: 2
+                });
+            },
+            error: function(err) {}
+        });
+
+        $(document).ready(function() {
+            $('#btn_scat_cat').click(function(){
+                $('#overlay').fadeIn();
+            });
+        });
+
+        {% if scatterplotProperties['splitPlots'] %}
+        {% for key, plot in scatterplotProperties['plots'] %}
+        jQuery(document).ready(function() {
+            new Highcharts.Chart({
+                chart: {
+                    renderTo: 'scatterplot{{ key }}',
+                    type: 'scatter',
+                    borderWidth: 2,
+                    borderColor: '#009900',
+                    zoomType: 'xy',
+                    //backgroundColor: {
+                    //    linearGradient: { x1: 0, y1: 0, x2: 1, y2: 6 },
+                    //    stops: [
+                    //        [0, 'rgb(255, 255, 255)'],
+                    //        [1, 'rgb(255, 255, 255)']
+                    //    ]
+                    //},
+                    plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+                    plotShadow: true,
+                    plotBorderWidth: 1
+                },
+                exporting: {
+                    enabled: true
+                },
+                title: {
+                    text: '{{ scatterplotProperties['highlight_gene']}}'
+                },
+                credits: {
+                    enabled: false
+                },
+                subtitle: {
+                    text: 'Sample: {{ key }} {{ scatterplotProperties['nCellsInPlot'][key]}} - {{ scatterplotProperties['nCellsExpressing'][key] }} Cells ({{(scatterplotProperties['nCellsExpressing'][key]/scatterplotProperties['nCellsInPlot'][key]*100)|round(2,'floor') }}%) express'
+                },
+                xAxis: {
+                    title:
+                        {
+                            enabled: true,
+                            text: '{{ scatterplotProperties['x_axis_label'] }}'
+                        },
+                    gridLineWidth: 2,
+                    plotLines: [
+                        {
+                            color: 'black',
+                            dashStyle: 'solid',
+                            value: 0,
+                            width: 1
+                        }
+
+
+                    ]
+                },
+                yAxis: {
+                    title:
+                        {
+                            enabled: true,
+                            text: '{{ scatterplotProperties['y_axis_label'] }}'
+                        },
+                    plotLines: [
+                        {
+                            color: 'black',
+                            dashStyle: 'solid',
+                            value: 0,
+                            width: 1
+                        }
+
+                    ]
+                },
+                colors: [
+                    '#D3D3D3',
+                    '#F7FBFF',
+                    '#CFE1F2',
+                    '#93C4DE',
+                    '#4A97C9',
+                    '#1664AB',
+                    '#08306B'
+                ],
+                colorAxis: {
+                    min: 0,
+                    max: 7,
+                    minColor: '#D3D3D3',
+                    maxColor: '#08306B',
+                    reversed: true
+
+                },
+                legend: {
+                    align: 'right',
+                    layout: 'vertical',
+                    margin: 10,
+                    verticalAlign: 'middle'
+                    //y: 25,
+                    //symbolHeight: 320
+                },
+
+                //    legend: {
+                //        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                //        borderWidth: 1
+                //    },
+                plotOptions: {
+                    scatter: {
+                        marker: {
+                            radius: {{ scatterplotProperties['dotsize'] | raw }},
+                            states: {
+                                hover: {
+                                    enabled: true,
+                                    lineColor: 'rgb(100,100,100)'
+                                }
+                            }
+                        },
+                        states: {
+                            hover: {
+                                marker: {
+                                    enabled: false
+                                }
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<b>Individual Cell</b><br>',
+                            pointFormat: 'SampleID: {point.sampleID} <br>Barcode: {point.name} <br> Log10 Expr: {point.log10Expr}',
+                        },
+                    }
+                },
+                series: [
+                    {
+                        name: 'Cells',
+                        colorKey: 'log10Expr',
+                        data: {{ scatterplotProperties['plots'][key] | raw }},
+
+                        turboThreshold: 100000,
+                        showInLegend: false
+                    },
+                ]
+            });
+        });
+        {% endfor %}
+        {% else %}
+        jQuery(document).ready(function() {
+            new Highcharts.Chart({
+                chart: {
+                    renderTo: 'scatterplot',
+                    type: 'scatter',
+                    borderWidth: 2,
+                    borderColor: '#009900',
+                    zoomType: 'xy',
+                    //backgroundColor: {
+                    //    linearGradient: { x1: 0, y1: 0, x2: 1, y2: 6 },
+                    //    stops: [
+                    //        [0, 'rgb(255, 255, 255)'],
+                    //        [1, 'rgb(255, 255, 255)']
+                    //    ]
+                    //},
+                    plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+                    plotShadow: true,
+                    plotBorderWidth: 1
+                },
+                exporting: {
+                    enabled: true
+                },
+                title: {
+                    text: '{{ scatterplotProperties['highlight_gene'] }}'
+                },
+                credits: {
+                    enabled: false
+                },
+                subtitle: {
+                    {#text: 'N Cells: {{ scatterplotProperties['nCellsInPlot']['total'] }} - {{ scatterplotProperties['nCellsExpressing']['total'] }} expressing {{ scatterplotProperties['highlight_gene'] }}'#}
+                    text: 'Sample: {{ 'All' }} {{ scatterplotProperties['nCellsInPlot']['total']}} - {{ scatterplotProperties['nCellsExpressing']['total'] }} Cells ({{(scatterplotProperties['nCellsExpressing']['total']/scatterplotProperties['nCellsInPlot']['total']*100)|round(2,'floor') }}%) express'
+                },
+                xAxis: {
+                    title:
+                        {
+                            enabled: true,
+                            text: '{{ scatterplotProperties['x_axis_label'] }}'
+                        },
+                    gridLineWidth: 2,
+                    plotLines: [
+                        {
+                            color: 'black',
+                            dashStyle: 'solid',
+                            value: 0,
+                            width: 1
+                        }
+
+
+                    ]
+                },
+                yAxis: {
+                    title:
+                        {
+                            enabled: true,
+                            text: '{{ scatterplotProperties['y_axis_label'] }}'
+                        },
+                    plotLines: [
+                        {
+                            color: 'black',
+                            dashStyle: 'solid',
+                            value: 0,
+                            width: 1
+                        }
+
+                    ]
+                },
+                colors: [
+                    '#D3D3D3',
+                    '#F7FBFF',
+                    '#CFE1F2',
+                    '#93C4DE',
+                    '#4A97C9',
+                    '#1664AB',
+                    '#08306B'
+                ],
+                colorAxis: {
+                    min: 0,
+                    max: 7,
+                    minColor: '#D3D3D3',
+                    maxColor: '#08306B',
+                    reversed: true
+
+                },
+                legend: {
+                    align: 'right',
+                    layout: 'vertical',
+                    margin: 10,
+                    verticalAlign: 'middle'
+                    //y: 25,
+                    //symbolHeight: 320
+                },
+
+                //    legend: {
+                //        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                //        borderWidth: 1
+                //    },
+                plotOptions: {
+                    scatter: {
+                        marker: {
+                            radius: {{ scatterplotProperties['dotsize'] | raw }},
+                            states: {
+                                hover: {
+                                    enabled: true,
+                                    lineColor: 'rgb(100,100,100)'
+                                }
+                            }
+                        },
+                        states: {
+                            hover: {
+                                marker: {
+                                    enabled: false
+                                }
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<b>Individual Cell</b><br>',
+                            pointFormat: 'SampleID: {point.sampleID} <br>Barcode: {point.name} <br> Log10 Expr: {point.log10Expr}',
+                        },
+                    }
+                },
+                series: [
+                    {
+                        name: 'Cells',
+                        colorKey: 'log10Expr',
+                        data: {{ scatterplotProperties['plots'] | raw }},
+
+                        turboThreshold: 100000,
+                        showInLegend: false
+                    },
+                ]
+            });
+        });
+        {% endif %}
+    </script>
+{% endblock %}

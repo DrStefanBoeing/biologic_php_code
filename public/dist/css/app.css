@@ -1,0 +1,179 @@
+.biologic-data-table td {
+    vertical-align: middle !important;
+    text-align: center;
+    position: relative;
+}
+
+.biologic-data-table td > div.success,
+.biologic-data-table td > div.danger {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+.biologic-data-table td > div.success > span,
+.biologic-data-table td > div.danger > span {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.biologic-data-table td > div.success {
+    background: #dff0d8;
+}
+
+.biologic-data-table td > div.danger {
+    background: #f2dede;
+}
+
+.biologic-data-table th {
+    vertical-align: middle !important;
+    text-align: center;
+}
+
+.biologic-data-table .th-inner {
+    white-space: normal !important;
+}
+
+.fixed-table-header .biologic-data-table  {
+    float: left;
+}
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+    width: 70%;
+    margin: auto;
+}
+
+.carousel-control {
+    top:50%;
+    width:auto;
+    height:1em;
+    background:transparent;
+}
+.carousel-control .glyphicon-chevron-left, .carousel-control .glyphicon-chevron-right  {
+    position:relative;
+    background:white;
+    display:block;
+    width:auto;
+    color:black;
+    z-index: 5;
+}
+
+.gene-background-information {
+    text-align: center;
+}
+
+.gene-background-information div.row > div {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.gene-background-information div.row > div a {
+    width: 320px;
+}
+
+.btn-success {
+    transition: all 0.5s ease;
+}
+
+.navbar-nav li.admin a {
+    background-color: #9e1414 !important;
+}
+
+.navbar-nav li.admin .dropdown-menu {
+    background: #9e1414;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.navbar-nav li.admin .dropdown-menu a {
+    color: #fff;
+    padding: 10px 15px;
+    border-top: 1px solid black;
+    transition: background 0.3s linear;
+}
+
+.navbar-nav li.admin .dropdown-menu a:hover {
+    background: #c73a3a !important;
+}
+
+.project-selection .project a {
+    width: 250px;
+}
+
+@media screen and (max-width: 767px) {
+    .project-selection .project {
+        text-align: center;
+        max-width: 400px;
+        margin: 40px auto;
+    }
+}
+
+input[type="submit"] {
+}
+
+.scatterplot-selection {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.scatterplot-selection select {
+    margin-bottom: 15px;
+}
+
+.experiment-nav {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+@media screen and (min-width: 768px) {
+    .experiment-nav {
+        margin-bottom: 100px;
+    }
+}
+
+.experiment-nav a {
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+div.export.btn-group button::before {
+    content: "Download current selection (max 2500 rows)";
+    padding-right: 10px;
+}
+
+.ck-editor__editable_inline {
+    min-height: 500px;
+    max-height: 500px;
+    overflow-y: scroll;
+}
+#gene_cat_selection_container {
+    display: inline-block;
+    vertical-align: middle;
+    background-color: lightgray;
+    padding: 10px;
+}
+#gene_cat_selection_container > button {
+    padding: 5px 20px;
+    font-size: 20px;
+    margin-bottom: 9px;
+}
+#gene_cat_selection_container input,
+#gene_cat_selection_container select {
+    margin: 5px 0;
+}
+#automplete_scat_gene,
+#automplete_scat_cat {
+    font-size: 20px;
+    width: 100%;
+}
+#automplete_scat_cat {
+    display: none;
+}
+#btn_scat_cat {
+    float: right;
+}

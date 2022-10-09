@@ -1,0 +1,53 @@
+{% extends 'portal/partials/layout.portal.twig' %}
+
+{% block content %}
+    <div align='center'>
+        <h2>
+            {% if project is defined %}
+                {{ project['name'] }}
+
+                <a href="{{ url('/project/'~project.project_code~'/manage') }}" class="btn btn-default btn-lg">Manage access</a>
+            {% else %}
+                All experiments
+            {% endif %}
+        </h2>
+
+        <table class='table table-striped table-bordered biologic-data-table'
+               data-toggle='table'
+               data-height="600"
+               data-search='true'
+               data-pagination='true'
+               data-show-export='true'>
+            <thead>
+            <tr>
+                <th data-sortable="true">Experiment name</th>
+                <th data-sortable="true">Main question(s)</th>
+                <th data-sortable="true">Experimental Description</th>
+                <th data-sortable="true">Scientist(s) in charge</th>
+                <th>Links</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for experiment in experiments %}
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">{{ experiment['name'] }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ experiment['main_question'] }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ experiment['description'] }}</td>
+                    <td style="text-align: center; vertical-align: middle;">{{ experiment['lead_scientist'] }}</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <a href="{{ url("/"~experiment['experiment_code']) }}" class="btn btn-success" role="button">Experiment Data »</a>
+                        {% if authed_user.canWrite(experiment) %} {# horribly inefficient #}
+                            <br>
+                            <a href="{{ url('/experiment/'~experiment.experiment_code~'/manage') }}" class="btn btn-default" style="margin-top: 10px;">Manage access</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        <br>
+    </div>
+{% endblock %}
+

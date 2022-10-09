@@ -1,0 +1,48 @@
+{% extends 'partials/layout.twig' %}
+
+
+{% block head_scripts %}
+
+    {% if scatterplotProperties is defined %}
+        {#<script type='text/javascript' src='dist/js/jquery.min.js'></script> #}
+        <script src='https://code.highcharts.com/highcharts.js'></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+    <div class='content'>
+
+
+        {% if scatterplotProperties is defined %}
+            <div class='content'>
+                <div align='center'>
+                    <h2>PCA</h2>
+                    <br>
+                </div>
+
+                <div align='center'>
+
+                    {% include 'plots/pca.twig' with {
+                        'scatterplotProperties': scatterplotProperties
+
+                    } %}
+
+                </div>
+
+            </div>
+
+
+        {% endif %}
+
+        {% include 'partials/pca-plot-select.twig' with {
+            'pca_column_names': scatterplotProperties['pca_column_names']
+        } %}
+
+        <br>
+        <br>
+    </div>
+{% endblock %}
+

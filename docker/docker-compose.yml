@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: biologic_server
+    ports:
+      - 80:80
+    volumes:
+      - ../:/var/www
+      - ./logs/apache2:/var/log/apache2
+    restart: always

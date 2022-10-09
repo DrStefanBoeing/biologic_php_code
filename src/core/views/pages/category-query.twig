@@ -1,0 +1,63 @@
+{% extends 'partials/layout.twig' %}
+
+{% block head_scripts %}
+    {% if heatmap is defined %}
+        <script src="{{ url('/dist/js/highcharts.js') }}"></script>
+        <script src="{{ url('/dist/js/map.js') }}"></script>
+        <script src="{{ url('/dist/js/data.js') }}"></script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class='content'>
+        <h1 align='center'>CategoryView</h1>
+        <br>
+    </div>
+
+    <div align="center">
+        <h2>Browse results by category</h2>
+        <div align='center'>
+            <font size = '4'>
+                Please select the category type to display by <font color='red'>selecting</font> one of the <br>
+                <b>Category Types:</b>
+                <br>
+                <a href="{{ url('/'~experiment_code~'/category-view?category_type=create heat map') }}" title="">Create new heat-map</a>
+
+                {% for menu_item in paste_category_view_menu_items %}
+                    | <a href="{{ url('/'~experiment_code~'/category-view?category_type=' ~ menu_item) }}" title="">{{ menu_item }}</a>
+                {% endfor %}
+            </font>
+        </div>
+    </div>
+
+    <div align="center">
+        <h1>Results for the Category <br> {{ cat_name }}</h1>
+        <br>
+    </div>
+
+    {% include 'plots/heatmap.twig' with {
+        'series': heatmap['series'],
+        'x_categories': heatmap['x_categories'],
+        'y_categories': heatmap['y_categories']
+    } %}
+
+    {% include 'partials/scatter-plot-select.twig' with {
+        'cat_id': query
+    } %}
+
+    {% include 'partials/ajax-data-table.twig' with {
+        'heading': 'Table: Venn data selection',
+        'columns': table['columns'],
+        'ajax_post_append': table['ajax_post_append'],
+        'ajax_url': url("/"~experiment_code~"/ajax/venn/table")
+    } %}
+
+    <div align="center">
+        <b>
+            All genes in {{ cat_name }}, including those genes that were not detected in this experiment:
+        </b>
+        <br>
+        {{ all_cat_genes }}
+    </div>
+
+{% endblock %}

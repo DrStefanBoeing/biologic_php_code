@@ -1,0 +1,93 @@
+
+<div align='center' class="biologic-data-table-container{{ idx }}">
+    {% if heading is defined %}
+        <br>
+        <h2>{{ heading }}</h2>
+        <br>
+    {% endif %}
+
+    {% if download_type is defined %}
+    <div id="toolbar{{ idx }}">
+        <button class="btn btn-default dropdown-toggle" title="Export data" data-toggle="dropdown" type="button" aria-expanded="false">
+            Download <i class="glyphicon glyphicon-export icon-share"></i> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="#" onclick="dataTableDownload{{ idx }}(event, 'csv')">CSV</a></li>
+            <li><a href="#" onclick="dataTableDownload{{ idx }}(event, 'json')">JSON</a></li>
+        </ul>
+    </div>
+    {% endif %}
+
+    <table class='table table-striped table-bordered biologic-data-table'
+           data-toolbar="#toolbar{{ idx }}"
+           data-toggle='table'
+           data-height="600"
+           data-search='true'
+           data-ajax="dataTableAjax{{ idx }}"
+           data-side-pagination="server"
+           data-pagination='true'>
+        <thead>
+        <tr>
+            {% for key, column in columns %}
+                <th data-field="{{ key }}" data-sortable="true">{{ column }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+    </table>
+
+    <br>
+</div>
+<script>
+
+    let query_defaults{{ idx }} = {
+        {% for key, value in ajax_post_append %}
+            {% if value is iterable %}
+                {{ key }}: [
+                    {% for _value in value %}
+                        "{{ _value }}",
+                    {% endfor %}
+                ],
+            {% else %}
+                {{ key }}: "{{ value }}",
+            {% endif %}
+        {% endfor %}
+    }
+
+    function dataTableAjax{{ idx }}(params) {
+        $.ajax({
+            type: "POST",
+            url: "{{ ajax_url }}",
+            data: JSON.stringify({
+                limit: params.data.limit,
+                offset: params.data.offset,
+                order: params.data.order,
+                search: params.data.search,
+                sort: params.data.sort,
+                query_defaults: query_defaults{{ idx }}
+            }),
+            contentType: 'application/json',
+            dataType: "json",
+            success: function(data) {
+                params.success({
+                    "rows": data.rows,
+                    "total": data.total
+                })
+            },
+            error: function(err) {
+                params.error(err)
+            }
+        })
+    }
+
+    {% if download_type is defined %}
+    function dataTableDownload{{ idx }}(event, format) {
+        event.preventDefault();
+
+        let search = $('.biologic-data-table-container{{ idx }} div.search input').val();
+
+        let url = '/{{ experiment_code }}/download/{{ download_type }}/'+format+'?'+window.location.href.split('?')[1]+'&search='+search+'&format='+format;
+
+        window.location.href = url;
+    }
+    {% endif %}
+</script>

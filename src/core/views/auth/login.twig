@@ -1,0 +1,173 @@
+{% extends 'auth/layout.auth.twig' %}
+
+{% block content %}
+    <br>
+    <br>
+
+    {% include 'partials/flash.twig' %}
+
+    <div align='center'>
+        {% if user %}
+            <h3> You are logged in as {{ user.email }} </h3>
+            <br>
+            <br>
+            <form action='{{ url('/logout') }}' method='POST' style='text-align: center'>
+                <div align='center'>
+                    <button type='submit' class='btn btn btn-success'>Logout</button>
+                </div>
+            </form>
+        {% else %}
+           <div style="
+                border: 1px solid lightgray;
+                max-width: 350px;
+                min-width: 250px;
+                margin: 10% auto 0;
+                -webkit-box-shadow: 10px 0px 40px -7px rgba(0,0,0,0.6);
+                -moz-box-shadow: 10px 0px 40px -7px rgba(0,0,0,0.6);
+                box-shadow: 10px 0px 40px -7px rgba(0,0,0,0.6);
+            ">
+                <div style="background-color: #d3d3d3; padding: 5px; text-align: center;">
+                    <p style="font-weight: bold; font-size: 18px;">Sign in</p>
+        <h1>Login</h1>
+
+        <br>
+        <form action='{{ url('/login') }}' method='POST' class="text-center">
+            {% if intended is defined and intended is not null %}
+                <input type="hidden" name="intended_path" value="{{ intended }}" />
+            {% endif %}
+
+            <div align='center'>
+
+                <div style="padding: 15px;">
+                    <form action='{{ url('/login') }}' method='post' class="text-center" style="margin-top: 25px;">
+                        <div align='center'>
+                            <div class="remote-login-steps">
+                                <input name="login-type" type="hidden" value="remote"/>
+                                <button id="login-button" class="btn btn-success" type="submit">Crick account sign-on</button>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <div style="text-align: center;">
+                        <p>or</p>
+                    </div>
+                    <hr>
+                    <form action='{{ url('/login') }}' method='post' class="text-center" style="margin-top: 25px;">
+                        {% if intended is defined and intended is not null %}
+                            <input type="hidden" name="intended_path" value="{{ intended }}" />
+                        {% endif %}
+                        <div align='center'>
+                            <div id="step1">
+                                <div>
+                                    <label for="email">Enter an EXTERNAL username</label>
+                                    <div>
+                                        <input type="text" name="email" id="email" autofocus required onkeyup="check_email_empty(event)" onkeydown="check_email_enter(event)" placeholder="External Login"/>
+                                    </div>
+                                </div>
+                                <br>
+                                <button type="button" class="btn btn-success" onclick="login_next(event)" disabled>Next</button>
+                            </div>
+                            <div id="step2" class="hidden">
+                                <div>
+                                    <label for="password">Password</label>
+                                    <div>
+                                        <input type="password" name="password" id="password" required />
+                                    </div>
+                                    <div id="reset_link"></div>
+                                </div>
+
+                                <br>
+                                <button type="button" class="btn btn-success" onclick="login_prev(event)">Prev</button>
+                                <button type='submit' class='btn btn-success'>Login</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <br>
+
+
+               <br>
+               <div align='center' width='90%'>
+                   <img src='crick.logo.jpg' width='220' height=auto style='border: 1.5px
+         #009900 solid;border-radius: 4px;moz-border-radius: 4px;webkit-border-radius: 4px;'>
+
+               </div>
+               <br>
+
+
+    <br>
+    <br>
+    <br>
+    <script>
+        function check_email_enter(event) {
+            var step1 = $("#step1 ");
+
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                event.preventDefault();
+                step1.find("button").click();
+            }
+        }
+
+        function check_email_empty(event) {
+            var step1 = $("#step1 ");
+
+            if(step1.find("#email").val() === "") {
+                step1.find("button").attr("disabled", true);
+            } else {
+                step1.find("button").attr("disabled", false);
+            }
+        }
+
+        function login_next(event) {
+            var step1 = $('#step1');
+            var step2 = $('#step2');
+            var email = step1.find('#email').val();
+            var password_field = step2.find('#password');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ url('/ajax/check-email') }}",
+                data: JSON.stringify({
+                    email: email,
+                }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function(data) {
+                    if(data.success === true) {
+                        var link = "{{ url('/password-reset') }}?email=" + email;
+
+                        $("#reset_link").html(
+                            "<a href=\""+link+"\">Forgot password?</a>"
+                        );
+                    } else {
+                        $("#reset_link").html("");
+                    }
+
+                    step2.removeClass('hidden');
+                    step1.addClass('hidden');
+                    password_field.focus();
+                },
+                error: function(err) {
+                    step2.removeClass('hidden');
+                    step1.addClass('hidden');
+                    password_field.focus();
+                }
+            });
+        }
+
+        function login_prev(event) {
+            var step1 = $('#step1');
+            var step2 = $('#step2');
+            var email_field = step1.find('#email');
+
+            step1.removeClass('hidden');
+            step2.addClass('hidden');
+            email_field.focus();
+        }
+    </script>
+{% endblock %}
+

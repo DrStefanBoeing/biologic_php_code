@@ -1,0 +1,8 @@
+
+###> docker ###
+
+/logs/
+/lib/
+/.idea/
+
+###< docker ###

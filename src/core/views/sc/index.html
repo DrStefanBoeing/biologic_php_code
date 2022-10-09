@@ -1,0 +1,388 @@
+<!--########################################################################-->
+<!--########################################################################-->
+<!--## Discovery without Bountdaries                                      ##-->
+<!--## Data Science                                                       ##-->
+<!--## Data Integration Presentation to the Pachnis lab                   ##-->
+<!--########################################################################-->
+<!--########################################################################-->
+
+
+<!--########################################################################-->
+<!--########################################################################-->
+<!--## Variable                                                           ##-->
+<!--########################################################################-->
+<!--########################################################################-->
+<html>
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/white.css">
+
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
+	<script src="http://code.highcharts.com/highcharts.js" type="text/javascript"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js" type="text/javascript"></script>
+
+	<!-- Bootstrap core CSS -->
+	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>
+	<!-- Bootstrap tables -->
+	<link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css' rel='stylesheet'>
+
+	<style>
+		.reveal section img { background:none; border:none; box-shadow:none; }
+	</style>
+
+</head>
+
+<body>
+<div class="reveal">
+	<div class="slides">
+
+		<!--########################################################################-->
+		<!--########################################################################-->
+		<!--## Begin Main Section                                                 ##-->
+		<!--########################################################################-->
+		<!--########################################################################-->
+
+
+		<!--########################################################################-->
+		<!--########################################################################-->
+		<!--## Begin Section                                                      ##-->
+		<!--########################################################################-->
+		<!--########################################################################-->
+
+
+
+
+		<section>
+			<section>
+
+				<h4> The bioLOGIC Single-cell Module</h4>
+
+				<font  size = "6" face="arial">
+					<u>https://biologic.crick.ac.uk/SC</u>
+				</font>
+
+				<img src="mdata/sc/html/assets/images/Slide1.JPG" width="70%" height="auto">
+				<br>
+
+
+
+			</section>
+
+			<section>
+
+				<h4>Crick Scientific Computing</h4>
+				<h6>Digital Development Team (DDT)</h6>
+				<font  size = "5" face="arial">
+					<a href="mailto:stefan.boeing@crick.ac.uk">Stefan Boeing</a>, Luke Nightingale, Marc Pollitt, Jude Pinnock, Oli Chowdhury,  <a href="mailto:amy.strange@crick.ac.uk">Amy Strange</a><br>
+				</font>
+				<br>
+
+				<h6>Database Team</h6>
+				<font  size = "5" face="arial">
+					Jacki Goldman, Karen Ambrose
+				</font>
+
+				<br><br>
+				<h4>Crick Core IT</h4>
+				<font  size = "5" face="arial">
+					Mickael Escudero, Guy Morrell
+				</font>
+
+				<br>
+
+			</section>
+
+
+			<section>
+				<h4>How to get more out of your sc-dataset?</h4>
+
+				<font  size = "5" face="arial">
+					<ul>
+
+						<li>
+							Interactive Data Visualization with Drilldowns<br>
+							<font  size = "4" face="arial">
+								<a href = "https://biologic.crick.ac.uk/agl372A/category-view/mysigdb_sc_sig__1" target = "_blank"> Cell Signature Heatmaps </a>,
+								<a href = "https://biologic.crick.ac.uk/agl372A/category-view?category_type=Create%20heat%20map" target = "_blank"> Custom Gene Set Heatmaps </a>,
+								<a href = "https://biologic.crick.ac.uk/agl372A/scatterplot?x_axis=contrast_3_logFC_glmG_WT_PC1_neg_vs_WT_PC1_pos&y_axis=contrast_3_lg10p_glmG_WT_PC1_neg_vs_WT_PC1_pos&highlight_gene=&cat_id=ag_lab_categories__10" target = "_blank"> DGE Volcano Plots </a>,
+								<a href = "https://biologic.crick.ac.uk/mdata/agl372A/html/FeatureView.html" target = "_blank"> Feature Plots </a>,
+								<a href = "https://biologic.crick.ac.uk/mdata/agl372A/html/Analysis_V3.html" target = "_blank"> Analysis Reports </a>,
+								<a href = "https://biologic.crick.ac.uk/agl372A/about" target = "_blank"> Project Powerpoint Summary </a>
+							</font><br><br>
+						</li>
+
+						<li>
+							Maintain reports, summary presentations, QC, code, data and results in an accessible state in one place<br>
+							<font  size = "4" face="arial">
+								<a href = "https://biologic.crick.ac.uk" target = "_blank">Secure, user-controlled result sharing (user: demo, pass:demo)</a>;
+								<a href = "https://biologic.crick.ac.uk/agl372A" target = "_blank">Everything in one place</a>
+							</font><br><br>
+						</li>
+						<li>Biological Context <br>
+							<font  size = "4" face="arial">
+								Cell Type Signature and Pathway Heatmaps,
+								<a href = "https://biologic.crick.ac.uk/EMTAB6653/venn?contrast_X_logFC_Expressed_in_N_Percent_Cells_low=0&contrast_X_logFC_Expressed_in_N_Percent_Cells_high=100&contrast_A_logFC_bulkRNASeq_agl298_DMSO_3d_vs_Prad_3d_low=-2&contrast_A_logFC_bulkRNASeq_agl298_DMSO_3d_vs_Prad_3d_high=2&contrast_A_logFC_bulkRNASeq_agl298_DMSO_14d_vs_Prad_14d_low=-5&contrast_A_logFC_bulkRNASeq_agl298_DMSO_14d_vs_Prad_14d_high=4&contrast_A_padj_bulkRNASeq_agl298_DMSO_3d_vs_Prad_3d_low=0&contrast_A_padj_bulkRNASeq_agl298_DMSO_3d_vs_Prad_3d_high=0.05&contrast_A_padj_bulkRNASeq_agl298_DMSO_14d_vs_Prad_14d_low=0&contrast_A_padj_bulkRNASeq_agl298_DMSO_14d_vs_Prad_14d_high=1&get_values=get_values&join=AND" target = "_blank">
+									Integrate Bulk Seq-Data</a>,
+								<a href = "https://biologic.crick.ac.uk/agl372A/category-view" target = "_blank">Pathways, Signatures, Existing Results</a>
+							</font><br><br>
+						</li>
+						<li>R Interface to your Data<br><br></li>
+						<li>Publication Supplement<br><br></li>
+
+					</ul>
+				</font>
+
+			</section>
+
+
+			<section>
+				<h4><a href="https://bioinformatics.crick.ac.uk/shiny/users/boeings/agl372A_app/" target = "_blank">Single-cell Module Example</a></h4>
+
+				<style>
+					body {
+						margin: 0;            /* Reset default margin */
+					}
+					iframe {
+						display: block;       /* iframes are inline by default */
+						background: #000;
+						border: none;         /* Reset default border */
+						height: 90vh;        /* Viewport-relative units */
+						width: auto;
+					}
+				</style>
+
+				<iframe src="https://bioinformatics.crick.ac.uk/shiny/users/boeings/agl372A_app/" title="Glioblastoma"></iframe>
+
+
+			</section>
+
+			<section>
+				<h4><a href="https://biologic.crick.ac.uk/mdata/tool25/html/PackageVignette.html" target = "_blank">Package Vignette</a></h4>
+
+				<style>
+					body {
+						margin: 0;            /* Reset default margin */
+					}
+					iframe {
+						display: block;       /* iframes are inline by default */
+						background: #000;
+						border: none;         /* Reset default border */
+						height: 100vh;        /* Viewport-relative units */
+						width: 100vw;
+					}
+				</style>
+
+				<div class="container-fluid" style="background-color:white;">
+						<div class="row">
+							<iframe src="https://biologic.crick.ac.uk/mdata/tool25/html/PackageVignette.html" title="biologicSC Vignette"></iframe>
+						</div>
+
+				</div>
+
+			</section>
+
+			<section>
+				<h4>bioLOGIC Single-cell Example Projects for Exploration</h4>
+				<br>
+				<ul>
+					<font size = "5">
+						<li><b>SC Glioblastoma Patients: </b> <a href = "https://biologic.crick.ac.uk/mdata/agl372A/html/FeatureView.html" target = "_blank"> [single-Cell Viewer]</a> <a href = "https://biologic.crick.ac.uk/agl372A" target = "_blank"> [Full Example Project]</a> </li>
+						<li><b>SC Lung Tumor Mirco-environemnt:</b> <a href = "https://biologic.crick.ac.uk/mdata/EMTAB6653/html/FeatureView.html" target = "_blank"> [single-Cell Viewer]</a> <a href = "https://biologic.crick.ac.uk/EMTAB6653" target = "_blank"> [Full Example Project]</a> </li>
+						<li><b>SC Olfactory and Enteric Neurons</b> <a href = "https://biologic.crick.ac.uk/mdata/vpl347/html/FeatureView.html" target = "_blank"> [single-Cell Viewer]</a> <a href = "https://biologic.crick.ac.uk/vpl347" target = "_blank"> [Full Example Project]</a> </li>
+					</font>
+				</ul>
+
+				<br><br>
+				<h4>bioLOGIC Crick single-Cell Refereces</h4>
+
+
+				<ul>
+					<font size = "5">
+						<li><b>Bonfanti Lab:</b> (Sara Campinotti, Roberta Raggazzini, Luca Zanieri) </li>
+						<li><b>Gould Lab:</b> (Andrew Bailey), </li>
+						<li><b>Lovell-Badge:</b> (Gunes Taylor, Emily Frost), </li>
+						<li><b>Schaefer Lab:</b> (Tobias Ackles), </li>
+						<li><b>Pachnis Lab:</b> (Song Chng, Tiffany Heanue)</li>
+					</font>
+				</ul>
+			</section>
+
+			<section>
+				<h4>Summary</h4>
+				<font size = "6">
+				<ul>
+					<li>Customizable Crick Development</li>
+					<li>Open-source / No license fees</li>
+					<li>(Crick) password protected sharing of result viewers</li>
+					<li>Data stays in-house at all times</li>
+					<li>Available for other data types</li>
+					<li>Questions or suggestions?<br></li>
+					</font>
+						<font size = "4">
+							&nbsp&nbsp&nbsp&nbspGet in touch: <a href="mailto:stefan.boeing@crick.ac.uk">Stefan Boeing</a> <a href="mailto:amy.strange@crick.ac.uk">Amy Strange</a></li>
+						</font>
+					<font size = "6">
+					</li>
+
+				</ul>
+
+			</section>
+
+		</section>
+
+
+
+
+
+	</div>
+</div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js'></script>
+<script>
+	Reveal.initialize({
+				// Display presentation control arrows
+				controls: true,
+
+				// Help the user learn the controls by providing hints, for example by
+				// bouncing the down arrow when they first encounter a vertical slide
+				controlsTutorial: true,
+
+				// Determines where controls appear, "edges" or "bottom-right"
+				controlsLayout: 'bottom-right',
+
+				// Visibility rule for backwards navigation arrows; "faded", "hidden"
+				// or "visible"
+				controlsBackArrows: 'faded',
+
+				// Display a presentation progress bar
+				progress: true,
+
+				// Set default timing of 2 minutes per slide
+				defaultTiming: 120,
+
+				// Display the page number of the current slide
+				slideNumber: false,
+
+				// Push each slide change to the browser history
+				history: false,
+
+				// Enable keyboard shortcuts for navigation
+				keyboard: true,
+
+				// Enable the slide overview mode
+				overview: true,
+
+				// Vertical centering of slides
+				center: true,
+
+				// Enables touch navigation on devices with touch input
+				touch: true,
+
+				// Loop the presentation
+				loop: false,
+
+				// Change the presentation direction to be RTL
+				rtl: false,
+
+				// Randomizes the order of slides each time the presentation loads
+				shuffle: false,
+
+				// Turns fragments on and off globally
+				fragments: true,
+
+				// Flags if the presentation is running in an embedded mode,
+				// i.e. contained within a limited portion of the screen
+				embedded: false,
+
+				// Flags if we should show a help overlay when the questionmark
+				// key is pressed
+				help: true,
+
+				// Flags if speaker notes should be visible to all viewers
+				showNotes: false,
+
+				// Global override for autoplaying embedded media (video/audio/iframe)
+				// - null: Media will only autoplay if data-autoplay is present
+				// - true: All media will autoplay, regardless of individual setting
+				// - false: No media will autoplay, regardless of individual setting
+				autoPlayMedia: null,
+
+				// Number of milliseconds between automatically proceeding to the
+				// next slide, disabled when set to 0, this value can be overwritten
+				// by using a data-autoslide attribute on your slides
+				autoSlide: 0,
+
+				// Stop auto-sliding after user input
+				autoSlideStoppable: true,
+
+				// Use this method for navigation when auto-sliding
+				autoSlideMethod: Reveal.navigateNext,
+
+				// Enable slide navigation via mouse wheel
+				mouseWheel: false,
+
+				// Hides the address bar on mobile devices
+				hideAddressBar: true,
+
+				// Opens links in an iframe preview overlay
+				// Add `data-preview-link` and `data-preview-link="false"` to customise each link
+				// individually
+				previewLinks: false,
+
+				// Transition style
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Transition speed
+				transitionSpeed: 'default', // default/fast/slow
+
+				// Transition style for full page slide backgrounds
+				backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+
+				// Number of slides away from the current that are visible
+				viewDistance: 3,
+
+				// Parallax background image
+				parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+				// Parallax background size
+				parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+
+				// Number of pixels to move the parallax background per slide
+				// - Calculated automatically unless specified
+				// - Set to 0 to disable movement along an axis
+				parallaxBackgroundHorizontal: null,
+				parallaxBackgroundVertical: null,
+
+				// The display mode that will be used to show slides
+				display: 'block'
+
+			},{dependencies: [
+					// Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+
+					// Interpret Markdown in <section> elements
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+
+					// Syntax highlight for <code> elements
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+					// Zoom in and out with Alt+click
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+
+					// Speaker notes
+					{ src: 'plugin/notes/notes.js', async: true },
+
+					// MathJax
+					{ src: 'plugin/math/math.js', async: true }
+				]}
+	);
+</script>
+</body>
+
+<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/sortable/0.8.0/js/sortable.js'></script>
+
+</html>

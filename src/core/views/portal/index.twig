@@ -1,0 +1,29 @@
+{% extends 'portal/partials/layout.portal.twig' %}
+
+{% block content %}
+    <div class="project-selection">
+        <h1 align="center">ProjectView</h1>
+
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                <div class="project">
+                    <h2>Show all experiments</h2>
+                    <p>Select this option to see all experiments available to you. </p>
+                    <a href="{{ url('/experiments') }}" class="btn btn-success btn-lg" role="button">View Experiments ({{ total_experiments }}) »</a>
+                </div>
+            </div>
+
+            {% for project in projects %}
+                <div class="col-md-4 col-sm-6">
+                    <div class="project">
+                        <h2>{{ project['name'] }}</h2>
+                        <p>In this project, the transcriptome of gut-associated neuronal cells will be examined. </p>
+                        <a href="{{ url('/project/'~project['project_code']) }}" class="btn btn-success btn-lg" role="button">View Experiments ({{ project['experiments']|length }}) »</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+

@@ -1,0 +1,10 @@
+
+<div class='container experiment-nav' role='main'>
+    <div>
+        <a href="{{ url('/'~experiment_code~'../mdata/nb033_scrnaseq_airspace_cells_inflammation/html/FeatureView.html') }}" class="btn btn-success btn-lg">Single-cell App&raquo;</a>
+
+        {% for link_name, link in nav_html_links %}
+            <a href="{{ link }}"  target="blank" class="btn btn-success btn-lg">{{ link_name }}</a>
+        {% endfor %}
+    </div>
+</div>

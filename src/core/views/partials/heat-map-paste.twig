@@ -1,0 +1,12 @@
+<form action="{{ '/'~experiment_code~'/category-view-paste' }}" method="post">
+    <div class="form-group" style="margin-top: 15px;">
+        <label for="category-view-paste">Paste values: (only supports comma and tab separated values)</label>
+        <textarea class="form-control" id="category-view-paste" name="category-view-paste" rows="4" cols="50"></textarea>
+    </div>
+
+    {% for category_type in category_types %}
+        <input class="btn btn-flat  btn-success" name="category-view-categories[{{ category_type }}]" type="hidden" value="{{ category_type }}">
+    {% endfor %}
+
+    <input class="btn btn-flat  btn-success" type="submit" value="submit">
+</form>

@@ -1,0 +1,126 @@
+{#
+This template partial accepts the following parameters;
+selection           => //
+post_target         => where to submit my form (url)
+parameter_name      => the name of the parameter for the sliders (e.g. logFC)
+#}
+
+<div align = 'center'>
+    <p class='ui-state-default ui-corner-all' style='padding:4px;margin-top:4em;'>
+        <span class='ui-icon ui-icon-signal' style='float:left; margin:-2px 5px 0 0;'></span>
+
+        <b>Value range selection</b>
+    </p>
+</div>
+
+<form action='{{ post_target }}' method='POST'>
+    <table border='0' style = 'width:95%'>
+
+        <tr style = 'height:60px;'>
+            <td align = 'center'>
+                <b>Screen/Experiment</b>
+            </td>
+
+            <td align = 'center'>
+                <b>{{ parameter_name }} (min)</b>
+            </td>
+            <td align = 'center'>
+                <b>Selection (low)</b>
+            </td>
+
+            <td  align = 'center' style = 'width:40%'>
+                <b>Value range selection</b>
+            </td>
+
+            <td align = 'center'>
+                <b>Selection (high)</b>
+            </td>
+
+            <td align = 'center'>
+                <b>{{ parameter_name }} (max)</b>
+            </td>
+        </tr>
+
+        {% for key, screen in selection %}
+            {% set slider_id = "screen_" ~ key %}
+            {% set low_id = key ~ '_low' %}
+            {% set high_id = key ~ '_high' %}
+
+
+            <script>
+                $(function() {
+                    $( '#'+'{{ slider_id }}').slider({
+                        range: true,
+                        min: {{ screen['slider_min'] }},
+                        max: {{ screen['slider_max'] }},
+                        step: 0.01,
+                        values: [ {{ old(low_id, screen['default_low']) }}, {{ old(high_id, screen['default_high']) }} ],
+                        orientation: 'horizontal',
+                        slide: function( event, ui ) {
+                            $( '#'+'{{ low_id }}').val(ui.values[ 0 ]);
+                            $( '#'+'{{ high_id }}').val(ui.values[ 1 ]);
+                        }
+                    });
+
+                    $( '#'+'{{ low_id }}' ).val($( '#'+'{{ slider_id }}' ).slider( 'values', 0 ));
+                    $( '#'+'{{ high_id }}' ).val($( '#'+'{{ slider_id }}' ).slider( 'values', 1 ));
+                });
+
+            </script>
+
+
+            <tr style = 'height:42px;'>
+                <td align = 'center'>
+                    <b>{{ screen['name'] }}</b>
+                </td>
+
+                <td align = 'center'>
+                    {{ screen['slider_min'] }}
+                </td>
+                <td align = 'center'>
+                    <input type='text' id='{{ low_id }}' name='{{ low_id }}' style='border:0; color:#f6931f; font-weight:bold;' size='3'>
+                </td>
+
+                <td  align = 'center' style = 'width:40%'>
+                    <div id='{{ slider_id }}' align = 'center'></div>
+                </td>
+
+                <td align = 'center'>
+                    <input type='text' id='{{ high_id }}' name='{{ high_id }}' style='border:0; color:#f6931f; font-weight:bold;' size='3'>
+                </td>
+
+                <td align = 'center'>
+                    {{ screen['slider_max'] }}
+                </td>
+            </tr>
+
+        {% endfor %}
+
+    </table>
+    <br>
+    <br>
+    <div align = 'center'>
+        <input type = 'hidden' name = 'get_values' value = 'get_values'>
+
+        <select name = 'join'>
+            <option value='AND' {% if old('join') == 'AND' %} selected {% endif %}>Individual sample queries joint by 'AND'</option>
+            <option value='OR' {% if old('join') == 'OR' %} selected {% endif %}>Individual sample queries joint by 'OR'</option>
+        </select><br><br>
+
+        <input type='Submit' value= 'Show results meeting the above criteria'>
+    </div>
+</form>
+<br>
+<br>
+<br>
+
+<div align = 'center'>
+    <form action='{{ post_target }}' method='POST'>
+        <input type = 'hidden' name = 'all_zero' value = 'all_zero'>
+
+        <!--
+        <input type='Submit' value= 'Set all sliders to lowest value'>
+        -->
+    </form>
+</div>
+<br>

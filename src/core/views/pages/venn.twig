@@ -1,0 +1,76 @@
+{% extends 'partials/layout.twig' %}
+
+{% block head_scripts %}
+<link rel='stylesheet' href='//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'>
+<script src='//code.jquery.com/jquery-1.10.2.js'></script>
+<script src='//code.jquery.com/ui/1.11.4/jquery-ui.js'></script>
+
+
+
+    {% if heatmap is defined %}
+        <script src='{{ url('/dist/js/highcharts.js') }}'></script>
+        <script src='{{ url('/dist/js/map.js') }}'></script>
+        <script src='{{ url('/dist/js/data.js') }}'></script>
+        
+        
+        
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class='content'>
+    <div class='content'>
+        <h2 align='center'>VennView</h2>
+        <br>
+        <div align='center'>
+            {% if heatmap is defined %}
+                <b><font color = 'red'>Results are shown below the slider selection - please scroll down</font></b>
+                <br><br>
+            {% endif %}
+
+            Please be patient if a large number of data points need to be rendered for the heatmap
+
+            <br><br>
+            Select a datarange of interest for each screen using the sliders below.
+            <br>
+        </div>
+    </div>
+
+    {% include 'partials/slider.twig' with {
+        'selection': venn_selection,
+        'post_target': 'venn',
+        'parameter_name': 'logFC'
+    } %}
+
+    {% if heatmap is defined %}
+        <div class='content'>
+            <div align='center'>
+                <h2>{{ 'heatmap.headline'|setting }}</h2>
+                <br>
+            </div>
+
+            <div align='center'>
+                {% include 'plots/heatmap.twig' with {
+                    'series': heatmap['series'],
+                    'x_categories': heatmap['x_categories'],
+                    'y_categories': heatmap['y_categories']
+                } %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if table is defined %}
+        {% include 'partials/ajax-data-table.twig' with {
+            'heading': 'Table: Venn data selection',
+            'columns': table['columns'],
+            'ajax_post_append': table['ajax_post_append'],
+            'ajax_url': url("/"~experiment_code~"/ajax/venn/table"),
+            'download_type': 'gene-table'
+        } %}
+    {% endif %}
+
+    <br>
+    <br>
+</div>
+{% endblock %}
+

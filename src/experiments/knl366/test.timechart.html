@@ -1,0 +1,110 @@
+
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+
+
+
+
+
+<html>
+<body>
+
+<div id='tschart' style='min-width: 310px; 
+	height: 400px; 
+	max-width: 600px;  
+	margin: 0 auto'></div>
+</div>
+
+</body>
+<script>
+Highcharts.chart('tschart', {
+	chart:{
+			borderWidth: 1,
+			borderColor: '#009900',
+			zoomType: 'xy'
+	},
+
+    
+	legend: {
+		enabled: true,
+        verticalAlign: 'bottom'
+    },
+
+	title: {
+		text: ''                
+    },
+	subtitle: {
+		text: ''
+	},
+	credits: {
+		enabled: false
+	},
+
+    yAxis: {
+		title: {
+			text: 'y_axis_label'
+		}
+     },
+
+    xAxis: {
+			title: {
+				enabled: true,
+				text: 'x_axis_label'
+			},
+            min: -1,
+			max: 6,
+			tickPositions: [0,1,2,3,4,5],
+			plotLines: [{color: 'grey',
+				dashstyle: 'ShortDash',
+				value: 3,
+				width: 1}]
+        },
+
+    
+
+   
+
+    series: [{
+    	name: 'CTRL',
+    	type: 'spline',
+		dashStyle: 'Solid',
+		color: 'green',
+        data: [[1,1],[2,3],[3,1],[4,2],[5,5]],
+        marker: {
+			enabled: false
+		},
+		states: {
+			hover: {
+				lineWidth: 0
+			}
+		},
+			enableMouseTracking: false
+		}, {
+        name: 'KLF14',
+        type: 'spline',
+		dashStyle: 'Solid',
+		color: 'red',
+        data: [[1,2],[2,3],[3,4],[4,6],[5,1]],
+        marker: {
+			enabled: false
+		},
+		states: {
+			hover: {
+				lineWidth: 0
+			}
+		},
+			enableMouseTracking: false
+    	}]
+    
+
+});
+
+</script>
+</html>

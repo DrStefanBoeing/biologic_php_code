@@ -1,0 +1,31 @@
+
+<div class='container experiment-nav' role='main'>
+    <div>
+        <a href='{{ url('/'~experiment_code~'/gene-view') }}' class='btn btn-success btn-lg' role='button'>GeneView &raquo;</a>
+        <a href='{{ url('/'~experiment_code~'/category-view') }}' class='btn btn-success btn-lg' role='button'>CategoryView &raquo;</a>
+        <a href='{{ url('/'~experiment_code~'/venn') }}' class='btn btn-success btn-lg' role='button'>VennView &raquo;</a>
+        <a href='{{ url('/'~experiment_code~'/scatterplot?x_axis='~setting('scatterplot.default-x')~'&y_axis='~setting('scatterplot.default-y')~'&headline=2D+Scatterplot') }}' class='btn btn-success btn-lg' role='button'>2D Scatterplot &raquo;</a>
+        
+        {% if setting('pca') is not null %}
+            {% if setting('featureViewParams') is null %}
+            <a href='{{ url('/'~experiment_code~'/pca') }}' class='btn btn-success btn-lg'>PCA</a>
+            {% endif %}
+        {% endif %}
+
+
+        {# This button will be activated, once testing for the FeaturePlot feature is complete
+        {% if setting('featureViewParams') is not null %}
+            <a href='{{ url('/'~experiment_code~'/feature-view') }}' class='btn btn-success btn-lg'>FeaturePlot</a>
+        {% endif %}
+        #}
+
+
+
+
+        <a href="{{ url('/'~experiment_code~'/report') }}" class="btn btn-success btn-lg">Report &raquo;</a>
+
+        {% for link_name, link in nav_html_links %}
+            <a href="{{ link }}"  target="blank" class="btn btn-success btn-lg">{{ link_name }}</a>
+        {% endfor %}
+    </div>
+</div>

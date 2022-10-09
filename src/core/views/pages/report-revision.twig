@@ -1,0 +1,48 @@
+{% extends 'partials/layout.twig' %}
+
+{% block content %}
+
+    <h1 align='center'>Revision {{ revision.created_at }}</h1>
+    <br>
+
+    <div class="row">
+        <div class="col-sm-9">
+            <div id='toolbar-container'>
+            </div>
+            <!-- This container will become the editable. -->
+            <form method="post">
+                <textarea name="content" id="editor" disabled>{{ revision.content|raw }}</textarea>
+                <br>
+                <div class="text-center">
+                    <input type="submit" value="Restore revision" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-3">
+            {% include 'partials/revision-history.twig' with {
+                'report': revision.report
+            } %}
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            ClassicEditor
+                .create(document.querySelector( '#editor' ), {
+                    extraPlugins: []
+                })
+                .then(editor => {
+                    editor.isReadOnly = true
+                })
+                .catch(error => {
+                    console.error( error );
+                });
+        };
+    </script>
+
+{% endblock %}
+
+{% block end_scripts %}
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.1.0/classic/ckeditor.js"></script>
+{% endblock %}

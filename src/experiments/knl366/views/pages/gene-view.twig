@@ -1,0 +1,122 @@
+{% extends 'partials/layout.twig' %}
+
+{% block head_scripts %}
+    <link href='{{ url('/dist/css/jquery-ui.css') }}' rel='stylesheet'>
+    <script src='{{ url('/dist/js/jquery-ui.js') }}'></script>
+
+    <script src='https://code.highcharts.com/highcharts.js'></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+{% endblock %}
+
+{% block content %}
+<div class='content'>
+    <div class='content'>
+        <h1 align='center'>Gene View</h1>
+        <br>
+        <div class='ui-widget'>
+            <form method='GET' style='text-align: center'>
+                <input type='text' id='automplete-1' name='query' placeholder='{{ setting('primary_gene_symbol') }}' value="{{ old('query', '') }}" >
+                <input type='submit'  value='GeneView' title = 'Enter an offical {{ setting('primary_gene_symbol') }} gene name in order to search the data' />
+                <input type='checkbox' name='exact' value='true' {{ old('exact')|lower == 'true' or old('query') == '' ? 'checked' : '' }} title ='If this box is unchecked, all genes starting with the query will be listed. If the box is 	checked only entries that match the query exactly will be listed'>Exact search<br>
+            </form>
+        </div>
+        <br>
+        <div class='page-header' align = 'center'>
+            <br>
+        </div>
+    </div>
+
+    {% if query is not null %}
+        <div align='center'>
+            <h2>
+                <b>Query: {{ query }}</b>
+            </h2>
+        </div>
+
+        <br>
+        <br>
+
+        <div align = 'center'>
+            <h2><b>{{ setting('count_table.headline') }}</b></h2>
+           
+            {% if setting('timecourse_chart') is not null %}
+                
+                
+                {% include 'plots/timecourse-chart.twig' with {
+                    'x_axis_label' : setting('timecourse_chart.timepoint_name'),
+                    'y_axis_label': setting('count_table.sidelabel'),
+                    'tickPositions' : timecourse_chart['tickPositions'],
+                    'xmin' : timecourse_chart['xmin'],
+                    'xmax' : timecourse_chart['xmax'],
+                    'plotlines_array' : timecourse_chart['plotlines_array'],
+                    'series' : timecourse_chart['series']
+                } %}
+
+                <br>
+                
+            {% endif %}
+            
+            {% include 'plots/column-chart.twig' with {
+                    'series': bar_chart['series'],
+                    'categories': bar_chart['categories'],
+                    'x_max': bar_chart['x_max'],
+                    'y_axis_label': setting('count_table.sidelabel'),
+                    'x_axis_label': ''
+            } %}
+
+
+
+
+
+        </div>
+        {% include 'partials/ajax-data-table.twig' with {
+            'heading': data_table_1['heading'],
+            'columns': data_table_1['columns'],
+            'ajax_post_append': data_table_1['ajax_post_append'],
+            'ajax_url': url("/"~experiment_code~"/ajax/venn/table")
+        } %}
+
+        {% include 'partials/scatter-plot-select.twig' with {
+            'highlight_gene': query
+        } %}
+
+        {% if old('exact')|lower == 'true' %}
+            {% include 'partials/gene-background-information.twig' with {
+                'gene_name': query
+            } %}
+        {% endif %}
+
+        {% for heading in category_tables['headings'] %}
+            {% include 'partials/ajax-data-table.twig' with {
+                'idx': loop.index,
+                'heading': heading ~ " categories featuring " ~ query,
+                'columns': category_tables['columns'],
+                'ajax_post_append': {'cat_heading': heading, 'q_gene_name': query},
+                'ajax_url': url("/"~experiment_code~"/ajax/table/ref-categories")
+            } %}
+        {% endfor %}
+
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block end_scripts %}
+    <script>
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/'~experiment_code~'/ajax/gene-list') }}",
+            success: function(data) {
+                $( '#automplete-1' ).autocomplete({
+                    source: data.gene_list,
+                    minLength: 2
+                });
+            },
+            error: function(err) {}
+        });
+    </script>
+{% endblock %}
+
